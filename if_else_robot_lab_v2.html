@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="kk">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>IF–ELSE: Робот зертханасы</title>
+<style>
+:root{--bg:#071326;--panel:#101f39;--cyan:#4de4ff;--blue:#477bff;--violet:#a78bfa;--green:#55e6a5;--red:#ff7188;--text:#eef6ff;--muted:#9eb2ce}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 50% 0,#183b69 0,#09172d 48%,#050c19 100%);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Arial,sans-serif;min-height:100vh;padding:14px}
+.app{max-width:1400px;margin:auto}.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 12px}.brand{font-weight:900;letter-spacing:.04em;font-size:clamp(16px,2vw,25px)}.brand span{color:var(--cyan)}.stats{display:flex;gap:8px;flex-wrap:wrap}.pill{background:#102644;border:1px solid #2a527a;border-radius:30px;padding:7px 12px;color:#cce9ff;font-size:13px}
+.stage{aspect-ratio:16/9;min-height:560px;display:grid;grid-template-columns:1fr 1fr;overflow:hidden;border:1px solid #35618a;border-radius:22px;background:#0b1930;box-shadow:0 25px 70px #0008;position:relative}
+.left,.right{padding:clamp(14px,2vw,28px);min-width:0;position:relative}.left{background:linear-gradient(145deg,#142b4b,#0b1830);border-right:1px solid #315276}.right{background:radial-gradient(ellipse at 50% 35%,#1d4771 0,#102747 48%,#0a1830 100%);display:flex;flex-direction:column;align-items:center;justify-content:space-between;overflow:hidden}
+h1{font-size:clamp(20px,2.2vw,30px);margin:0 0 5px}.sub{color:var(--muted);font-size:13px;margin-bottom:15px}.levelrow{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}.level{color:var(--cyan);font-weight:800;font-size:13px}.task{padding:12px 14px;border-radius:14px;background:#1a3658;border:1px solid #38648d;margin-bottom:12px;font-size:14px;line-height:1.5}.task b{color:#8feeff}
+.editor{background:#06101f;border:1px solid #31547b;border-radius:13px;overflow:hidden;box-shadow:inset 0 0 20px #0006}.editorbar{padding:8px 12px;background:#182b46;color:#a8c6e4;font-size:12px;display:flex;justify-content:space-between}.code{padding:12px 14px;font:clamp(12px,1.25vw,15px)/1.75 ui-monospace,SFMono-Regular,Consolas,monospace;white-space:pre-wrap;color:#d8eaff;min-height:130px}.kw{color:#c6a4ff}.fn{color:#5ee7ff}.num{color:#ffd479}.inputs{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:12px}.field label{display:block;color:#a9c3df;font-size:12px;margin:0 0 5px}.field input,.field select{width:100%;background:#071528;color:#fff;border:1px solid #41668e;border-radius:10px;padding:10px;font-size:15px;outline:none}.field input:focus,.field select:focus{border-color:var(--cyan);box-shadow:0 0 0 2px #4de4ff22}.controls{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:10px}.btn{border:0;border-radius:11px;padding:11px 13px;font-weight:800;cursor:pointer;color:#061427;background:linear-gradient(100deg,#54e6ff,#6ba5ff);box-shadow:0 5px 18px #31bce633}.btn.secondary{background:#263e5e;color:#d9eaff;border:1px solid #45658b;box-shadow:none}.btn:active{transform:translateY(1px)}.feedback{margin-top:10px;min-height:42px;border-radius:11px;padding:10px 12px;background:#0a1729;border:1px solid #2a496a;color:#bdd4ec;font-size:13px}
+.robot-title{align-self:stretch;display:flex;justify-content:space-between;align-items:center;color:#b9d9f6;font-size:13px}.robot-title strong{color:var(--cyan);letter-spacing:.08em}.arena{width:100%;flex:1;display:flex;align-items:center;justify-content:center;position:relative;min-height:230px}.gridfloor{position:absolute;bottom:4%;width:90%;height:25%;background:linear-gradient(#2de1ff22 1px,transparent 1px),linear-gradient(90deg,#2de1ff22 1px,transparent 1px);background-size:28px 22px;transform:perspective(230px) rotateX(62deg);transform-origin:bottom;mask-image:linear-gradient(transparent,#000)}
+.robot{width:clamp(130px,18vw,230px);height:270px;position:relative;z-index:2;filter:drop-shadow(0 18px 18px #0008);animation:float 3s ease-in-out infinite;transition:transform .6s}.robot.run{animation:hop .65s ease-in-out 2}.robot.good{filter:drop-shadow(0 0 28px #4df0b5cc);animation:celebrate .85s ease-in-out 2}
+.robot.bad{filter:drop-shadow(0 0 24px #ff526dcc);animation:angryShake .12s linear 7}
+@keyframes celebrate{0%,100%{transform:translateY(0) rotate(0) scale(1)}25%{transform:translateY(-22px) rotate(-7deg) scale(1.04)}50%{transform:translateY(-8px) rotate(7deg) scale(1.08)}75%{transform:translateY(-25px) rotate(0) scale(1.04)}}
+@keyframes angryShake{0%,100%{transform:translateX(0) rotate(0)}25%{transform:translateX(-8px) rotate(-4deg)}75%{transform:translateX(8px) rotate(4deg)}}
+.robot.good .eye{height:9px;top:38%;border-radius:10px 10px 3px 3px}
+.robot.good .mouth{height:11px;width:25%;left:37.5%;bottom:13%;border:3px solid #7beeff;border-top:0;background:transparent;border-radius:0 0 18px 18px}
+.robot.bad .eye{background:#ff647c;box-shadow:0 0 13px #ff526d;transform:scaleY(1.25)}
+.robot.bad .visor:before,.robot.bad .visor:after{content:"";position:absolute;top:21%;width:25%;height:4px;background:#ff7188;border-radius:4px}
+.robot.bad .visor:before{left:18%;transform:rotate(20deg)}
+.robot.bad .visor:after{right:18%;transform:rotate(-20deg)}
+.robot.bad .mouth{width:25%;left:37.5%;height:8px;bottom:13%;border:3px solid #ff7188;border-bottom:0;background:transparent;border-radius:16px 16px 0 0}
+.thought{position:absolute;z-index:5;top:4%;left:50%;transform:translateX(-50%) scale(.75);opacity:0;pointer-events:none;min-width:170px;max-width:88%;padding:12px 16px;border-radius:18px;background:linear-gradient(145deg,#f7fdff,#c8eaff);color:#102a45;border:2px solid #65dcff;box-shadow:0 8px 25px #0008;text-align:center;font-weight:900;font-size:clamp(14px,1.6vw,20px);transition:opacity .25s,transform .25s}
+.thought:after{content:"";position:absolute;bottom:-10px;left:50%;width:17px;height:17px;background:#d7f3ff;border-right:2px solid #65dcff;border-bottom:2px solid #65dcff;transform:translateX(-50%) rotate(45deg)}
+.thought.show{opacity:1;transform:translateX(-50%) scale(1)}
+.thought small{display:block;font-size:10px;color:#47718e;letter-spacing:.12em;margin-bottom:4px}
+.robot.good .core{background:#145d58;box-shadow:0 0 22px #55e6a5}
+.robot.bad .core{background:#612b40;border-color:#ff7188;box-shadow:0 0 22px #ff526d}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}@keyframes hop{0%,100%{transform:translateY(0) rotate(0)}40%{transform:translateY(-24px) rotate(5deg)}70%{transform:translateY(0) rotate(-4deg)}}
+.head{position:absolute;top:18px;left:25%;width:50%;height:37%;border-radius:28px 28px 23px 23px;background:linear-gradient(145deg,#f4fbff,#8faecb 55%,#52799f);border:4px solid #d5f5ff;box-shadow:inset -8px -8px 15px #284c70,inset 5px 5px 12px white}.visor{position:absolute;inset:22% 10%;border-radius:15px;background:linear-gradient(135deg,#071b35,#123c60);border:2px solid #5feaff;box-shadow:0 0 18px #2be5ff66}.eye{position:absolute;top:30%;width:13px;height:17px;border-radius:50%;background:#6cf4ff;box-shadow:0 0 12px #5cefff}.eye.one{left:25%}.eye.two{right:25%}.mouth{position:absolute;bottom:19%;left:40%;width:20%;height:4px;border-radius:5px;background:#7beeff}.ear{position:absolute;top:38%;width:13px;height:28px;border-radius:8px;background:#67dfff;border:2px solid #d7faff}.ear.l{left:19%}.ear.r{right:19%}.body{position:absolute;top:58%;left:31%;width:38%;height:29%;border-radius:17px;background:linear-gradient(145deg,#eaf8ff,#7599ba 65%,#456a8e);border:3px solid #d4f4ff;box-shadow:inset -7px -6px 10px #244565}.core{position:absolute;left:33%;top:25%;width:34%;height:33%;border-radius:50%;background:#153c5e;border:3px solid #5eeaff;box-shadow:0 0 18px #4de4ff}.core:after{content:"";position:absolute;inset:28%;border-radius:50%;background:#7afff0;box-shadow:0 0 12px #7afff0}.arm{position:absolute;top:62%;width:15%;height:29%;border-radius:18px;background:linear-gradient(90deg,#6789aa,#e6f7ff);border:2px solid #d4f4ff;transform-origin:top}.arm.l{left:17%;transform:rotate(20deg)}.arm.r{right:17%;transform:rotate(-20deg)}.leg{position:absolute;top:84%;width:15%;height:14%;border-radius:9px;background:linear-gradient(90deg,#698bab,#eafaff);border:2px solid #d4f4ff}.leg.l{left:34%}.leg.r{right:34%}
+.actionbox{width:90%;max-width:430px;text-align:center;background:#08182ccc;border:1px solid #3c719b;border-radius:14px;padding:11px;margin-bottom:8px;z-index:3}.actionbox .label{color:#9fbddb;font-size:11px;letter-spacing:.12em}.actionbox .result{font-weight:900;font-size:clamp(18px,2vw,26px);color:#7df2ff;margin-top:3px}.robotmsg{color:#d6ebff;font-size:13px;min-height:20px;text-align:center;margin-bottom:10px}
+.bottom{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-top:10px;color:#8da9c8;font-size:12px}.progress{height:7px;background:#203a58;border-radius:10px;overflow:hidden;flex:1}.progress span{display:block;height:100%;width:0;background:linear-gradient(90deg,#4de4ff,#8b91ff);transition:width .3s}
+@media(max-width:760px){body{padding:8px}.top{align-items:flex-start;flex-direction:column}.stage{aspect-ratio:auto;min-height:0;grid-template-columns:1fr;overflow:visible}.left{border-right:0;border-bottom:1px solid #315276}.right{min-height:390px}.robot{width:150px;height:230px}.code{min-height:100px}.bottom{font-size:11px}}
+@media(min-width:761px) and (max-height:700px){.stage{min-height:500px}.left,.right{padding:14px}.robot{height:220px}.task{padding:8px;margin-bottom:8px}.code{min-height:100px}}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="top"><div class="brand">🤖 ROBOT <span>IF–ELSE</span> LAB</div><div class="stats"><div class="pill">🎮 7-СЫНЫП</div><div class="pill">⭐ Ұпай: <b id="score">0</b>/6</div><div class="pill">🧠 Миссия: <b id="mission">1</b>/6</div></div></header>
+<main class="stage">
+<section class="left">
+ <div class="levelrow"><h1>Кодты іске қос!</h1><span class="level" id="level">МИССИЯ 01</span></div>
+ <div class="sub">Python шартты операторларының интерактивті зертханасы</div>
+ <div class="task" id="task">Екі санды салыстыр. Егер A үлкен болса, роботқа «A үлкен» деп хабарла.</div>
+ <div class="editor"><div class="editorbar"><span>● ● ● &nbsp; main.py</span><span>PYTHON 3</span></div><div class="code" id="code"></div></div>
+ <div class="inputs">
+  <div class="field"><label for="a">A саны</label><input id="a" type="number" value="12"></div>
+  <div class="field"><label for="b">B саны</label><input id="b" type="number" value="7"></div>
+  <div class="field"><label for="op">Салыстыру шарты</label><select id="op"><option value=">">A &gt; B</option><option value="<">A &lt; B</option><option value="==">A == B</option><option value="!=">A != B</option><option value=">=">A &gt;= B</option><option value="<=">A &lt;= B</option></select></div>
+  <div class="field"><label for="act">Әрекет</label><select id="act"><option value="add">Қосу (A + B)</option><option value="sub">Азайту (A - B)</option><option value="square">A санын квадраттау</option><option value="cube">A санын кубтау</option></select></div>
+ </div>
+ <div class="controls"><button class="btn" id="run">▶ КОДТЫ ОРЫНДАУ</button><button class="btn secondary" id="check">✓ МИССИЯНЫ ТЕКСЕРУ</button></div>
+ <div class="feedback" id="feedback" aria-live="polite">💡 Сандарды енгізіп, шартты таңда. Роботтың әрекетін бақыла!</div>
+ <div class="bottom"><span>Прогресс</span><div class="progress"><span id="bar"></span></div><span id="pct">0%</span></div>
+</section>
+<section class="right">
+ <div class="robot-title"><span>🤖 ОРЫНДАУШЫ</span><strong>ROBO–X</strong><span id="status">КҮТУДЕ</span></div>
+ <div class="arena"><div class="thought" id="thought"><small>ROBO–X ОЙЛАП ТҰР...</small><span id="thoughtText">Жауап осында шығады</span></div><div class="gridfloor"></div>
+  <div class="robot" id="robot"><div class="ear l"></div><div class="ear r"></div><div class="head"><div class="visor"><i class="eye one"></i><i class="eye two"></i><i class="mouth"></i></div></div><div class="body"><div class="core"></div></div><div class="arm l"></div><div class="arm r"></div><div class="leg l"></div><div class="leg r"></div></div>
+ </div>
+ <div class="actionbox"><div class="label">РОБОТТЫҢ НӘТИЖЕСІ</div><div class="result" id="result">Дайынмын!</div></div>
+ <div class="robotmsg" id="robotmsg">Сәлем! Кодты іске қосуға дайынмын.</div>
+</section>
+</main>
+</div>
+<script>
+const missions=[
+ {task:"Екі санды салыстыр. A > B болса, роботқа «A үлкен» деп хабарла.",op:">",act:"add",a:12,b:7,truth:true},
+ {task:"A саны B-ге тең болса, шарт орындалады. == операторын қолдан.",op:"==",act:"add",a:8,b:8,truth:true},
+ {task:"A және B тең емес екенін тексер. != операторын таңда.",op:"!=",act:"sub",a:15,b:6,truth:true},
+ {task:"A саны B-ден кіші немесе тең бе? <= шартын тексер.",op:"<=",act:"square",a:4,b:9,truth:true},
+ {task:"A саны B-ден үлкен немесе тең бе? >= шартын тексер.",op:">=",act:"cube",a:5,b:5,truth:true},
+ {task:"Шарт жалған болғанда else тармағы орындалатынын көрсет: A < B шарты.",op:"<",act:"sub",a:14,b:3,truth:false}
+];
+let index=0,score=0,completed=new Set(),lastRun=null;
+const $=id=>document.getElementById(id);
+function pyCode(){let op=$('op').value,act=$('act').value;let expression={add:"A + B",sub:"A - B",square:"A ** 2",cube:"A ** 3"}[act];return `A = int(input())\nB = int(input())\n\nif A ${op} B:\n    print("${act==='add'?'Қосу':act==='sub'?'Азайту':act==='square'?'Квадрат':'Куб'}:", ${expression})\nelse:\n    print("Шарт орындалмады")`;}
+function render(){let m=missions[index];$('mission').textContent=index+1;$('level').textContent='МИССИЯ '+String(index+1).padStart(2,'0');$('task').innerHTML=m.task;$('a').value=m.a;$('b').value=m.b;$('op').value=m.op;$('act').value=m.act;$('code').textContent=pyCode();$('feedback').textContent='💡 Тапсырманы оқы. Кодты іске қосып, роботтың әрекетін бақыла!';$('result').textContent='Дайынмын!';$('robotmsg').textContent='Келесі тапсырманы күтіп тұрмын.';$('status').textContent='КҮТУДЕ';$('robot').className='robot';$('thought').classList.remove('show');$('thoughtText').textContent='';lastRun=null;}
+function compare(a,b,op){return {'>':a>b,'<':a<b,'==':a===b,'!=':a!==b,'>=':a>=b,'<=':a<=b}[op];}
+function execute(){let a=Number($('a').value),b=Number($('b').value),op=$('op').value,act=$('act').value;if($('a').value===''||$('b').value===''||!Number.isFinite(a)||!Number.isFinite(b)){$('feedback').textContent='⚠️ Екі санды да дұрыс енгіз!';return}
+let ok=compare(a,b,op),val=act==='add'?a+b:act==='sub'?a-b:act==='square'?a**2:a**3;lastRun={a,b,op,act,ok,val};$('code').textContent=pyCode();$('robot').className='robot '+(ok?'good':'bad');$('status').textContent=ok?'TRUE':'FALSE';
+let thought=ok?`Ойландым: ${a} ${op} ${b} — АҚИҚАТ! Нәтиже: ${val}`:`Ойландым: ${a} ${op} ${b} — ЖАЛҒАН. else тармағы!`;
+$('thoughtText').textContent=thought;$('thought').classList.remove('show');void $('thought').offsetWidth;$('thought').classList.add('show');
+$('result').textContent=ok?String(val):'else → Шарт жалған';$('robotmsg').textContent=ok?'😄 Керемет! Мен қуанып тұрмын!':'😠 Қап! Шарт жалған екен. Қайта тексер!';
+$('feedback').textContent=ok?`✅ if тармағы орындалды. Нәтиже: ${val}`:'↪ Шарт орындалмады. Python else тармағын орындады.';}
+function check(){if(!lastRun){$('feedback').textContent='Алдымен «КОДТЫ ОРЫНДАУ» батырмасын бас!';return}let m=missions[index],correct=lastRun.op===m.op&&lastRun.act===m.act&&lastRun.a===m.a&&lastRun.b===m.b&&lastRun.ok===m.truth;if(correct){if(!completed.has(index)){completed.add(index);score++;$('score').textContent=score;$('bar').style.width=(score/6*100)+'%';$('pct').textContent=Math.round(score/6*100)+'%'}$('feedback').textContent='🏆 Дұрыс! Сен шартты операторды дұрыс қолдандың.';$('robotmsg').textContent='🥳 Тамаша! Сен тапсырманы орындадың!';$('robot').className='robot good';$('thoughtText').textContent='Мен білдім! Жауап дұрыс! 🎉';$('thought').classList.add('show');if(index<missions.length-1){$('check').textContent='КЕЛЕСІ МИССИЯ →';$('check').onclick=()=>{index++;$('check').textContent='✓ МИССИЯНЫ ТЕКСЕРУ';$('check').onclick=check;render()}}else{$('check').textContent='ҚАЙТА ОЙНАУ';$('check').onclick=()=>{index=0;score=0;completed.clear();$('score').textContent=0;$('bar').style.width='0%';$('pct').textContent='0%';$('check').textContent='✓ МИССИЯНЫ ТЕКСЕРУ';$('check').onclick=check;render()}}}else{$('feedback').textContent='❌ Әлі дұрыс емес. Тапсырмадағы шартты, сандарды және әрекетті қайта тексер.';$('robotmsg').textContent='😤 Бұл жауап дұрыс емес! Тағы бір рет ойлан.';$('robot').className='robot bad';$('thoughtText').textContent='Хмм... жауабымды қайта тексерейін!';$('thought').classList.add('show')}}
+$('run').addEventListener('click',execute);$('check').addEventListener('click',check);['a','b','op','act'].forEach(id=>$(id).addEventListener('input',()=>{$('code').textContent=pyCode();lastRun=null}));render();
+</script>
+</body></html>
